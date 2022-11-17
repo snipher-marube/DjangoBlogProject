@@ -22,4 +22,6 @@ urlpatterns = [
     path('search/', views.post_search, name='search'),
     # like post
     path('<int:post_id>/like/', views.post_like, name='post_like'),
+    # send email
+    path('sendEmail/', views.sendEmail, name='sendEmail'),
 ]

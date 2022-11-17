@@ -1,6 +1,9 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.mail import send_mail, EmailMessage
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -164,18 +167,29 @@ def post_search(request):
 
 
 def contact(request):
-    form = ContactForm()
+    return render(request, 'blog/contact.html')
+
+def sendEmail(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            form = ContactForm()
 
-    context = {
-        'form': form,
-    }
+        template = render_to_string('blog/email_template.html', {
+            'name': request.POST['name'],
+            'email': request.POST['email'],
+            'message': request.POST['message'],
+        })
 
-    return render(request, 'blog/contact.html', context)
+        email = EmailMessage(
+            request.POST['subject'],
+            template,
+            settings.EMAIL_HOST_USER,
+            ['snipherblog@gmail.com']
+        )
+
+        email.fail_silently = False
+        email.send()
+        messages.success(request, 'Your message has been sent successfully')
+
+    return render(request, 'blog/contact.html')
 
 
 @require_POST

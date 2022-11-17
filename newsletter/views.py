@@ -28,6 +28,14 @@ def newsletter_subscribe(request):
         email = request.POST['email']
         if Newsletter.objects.filter(email=email).exists():
             messages.error(request, 'You are already subscribed to our newsletter')
+            # check if the email is verified
+            if Newsletter.objects.filter(email=email, verified=True).exists():
+                messages.error(request, 'Your email is already verified')
+                return redirect('blog:home')
+            else:
+                messages.error(request, 'Your email is not verified')
+                return redirect('blog:home')
+
             return redirect('blog:home')
         else:
             Newsletter.objects.create(email=email)
