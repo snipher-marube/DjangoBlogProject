@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home {% endblock %}
+{% load blog_tags %}
+{% block content %}
+    <!-- ********** Hero Area Start ********** -->
+    <div class="hero-area">
+
+        <!-- Hero Slides Area -->
+        <div class="hero-slides owl-carousel">
+            <!-- Single Slide -->
+            <div class="single-hero-slide bg-img background-overlay" style="background-image: url(../../static/img/blog-img/bg2.jpg);"></div>
+            <!-- Single Slide -->
+            <div class="single-hero-slide bg-img background-overlay" style="background-image: url(../../static/img/blog-img/bg1.jpg);"></div>
+        </div>
+
+        <!-- Hero Post Slide -->
+        <div class="hero-post-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="hero-post-slide">
+                            <!-- Single Slide -->
+                            {% for post in posts %}
+                            <div class="single-slide d-flex align-items-center">
+                                <div class="post-number">
+                                    <p>{{ post.id }}</p>
+                                </div>
+                                <div class="post-title">
+                                    <a href="{{ post.get_absolute_url }}">{{ post.title}}</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ********** Hero Area End ********** -->
+
+    <div class="main-content-wrapper section-padding-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- ============= Post Content Area Start ============= -->
+                <div class="col-12 col-lg-8">
+                    <div class="post-content-area mb-50">
+                        <!-- Catagory Area -->
+                        <div class="world-catagory-area">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="title">Don’t Miss</li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tab1" data-toggle="tab" href="#world-tab-1" role="tab" aria-controls="world-tab-1" aria-selected="true">All</a>
+                                </li>
+
+                                {% for tag in tags %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url "blog:post_list_by_tag" tag.slug %}" role="tab" aria-controls="world-tab-2" aria-selected="false">{{ tag }}</a>
+                                </li>
+                                {% endfor %}
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        {% for tag in more_tags %}
+                                        <a class="nav-link" href="{% url 'blog:post_list_by_tag' tag.slug %}" role="tab"
+                                           aria-controls="world-tab-7" aria-selected="false">{{ tag }}</a>
+                                        {% endfor %}
+
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="myTabContent">
+
+                                <div class="tab-pane fade show active" id="world-tab-1" role="tabpanel" aria-labelledby="tab1">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="world-catagory-slider owl-carousel wow fadeInUpBig" data-wow-delay="0.1s">
+
+                                                <!-- Single Blog Post -->
+                                                {% for post in posts %}
+                                                <div class="single-blog-post">
+                                                    <!-- Post Thumbnail -->
+                                                    <div class="post-thumbnail">
+                                                        <img src="{{post.image.url}}" alt="">
+                                                        <!-- Catagory -->
+                                                        {% for tag in posts.tags.all %}
+                                                            <div class="post-cta">
+                                                                <a href="{% url "blog:post_list_by_tag" tag.slug %}"> {{ tag.name }}</a>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <!-- Post Content -->
+                                                    <div class="post-content">
+                                                        <a href="{{ post.get_absolute_url }}" class="headline">
+                                                            <h5>{{ post.title}}</h5>
+                                                        </a>
+                                                        <p>{{ post.intro|markdown|truncatewords_html:30}}</p>
+                                                        <!-- Post Meta -->
+                                                        <div class="post-meta">
+                                                            <p><a href="#" class="post-author">{{ post.author }}</a> on <a href="#" class="post-date">{{ post.publish }}</a></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-md-6">
+                                            <!-- Single Blog Post -->
+                                            {% for post in side_posts %}
+                                            <div class="single-blog-post post-style-2 d-flex align-items-center wow fadeInUpBig" data-wow-delay="0.2s">
+                                                <!-- Post Thumbnail -->
+                                                <div class="post-thumbnail">
+                                                    <img src="{{post.image.url}}" alt="">
+                                                </div>
+                                                <!-- Post Content -->
+                                                <div class="post-content">
+                                                    <a href="{{ post.get_absolute_url }}" class="headline">
+                                                        <h5>{{ post.title}}</h5>
+                                                    </a>
+                                                    <!-- Post Meta -->
+                                                    <div class="post-meta">
+                                                        <p><a href="{{ post.get_absolute_url }}" class="post-author">{{ post.author }}</a> on
+                                                            <a href="{{ post.get_absolute_url }}" class="post-date">{{ post.publish }}</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Catagory Area -->
+                        <div class="world-catagory-area mt-50">
+                            <ul class="nav nav-tabs" id="myTab2" role="tablist">
+                                <li class="title">What's Trending</li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tab10" data-toggle="tab" href="#world-tab-10" role="tab" aria-controls="world-tab-10" aria-selected="true">All</a>
+                                </li>
+
+                                    {% for tag in tags %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url "blog:post_list_by_tag" tag.slug %}" role="tab" aria-controls="world-tab-2" aria-selected="false">{{ tag }}</a>
+                                    </li>
+                                    {% endfor %}
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>
+                                    <div class="dropdown-menu">
+                                        {% for tag in more_tags %}
+                                        <a class="nav-link" href="{% url 'blog:post_list_by_tag' tag.slug %}" role="tab"
+                                           aria-controls="world-tab-7" aria-selected="false">{{ tag }}</a>
+                                        {% endfor %}
+
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="myTabContent2">
+
+                                <div class="tab-pane fade show active" id="world-tab-10" role="tabpanel" aria-labelledby="tab10">
+                                    <div class="row">
+                                        {% for post in featured_posts %}
+
+                                        <div class="col-12 col-md-6">
+                                            <!-- Single Blog Post -->
+
+                                            <div class="single-blog-post wow fadeInUpBig" data-wow-delay="0.2s">
+                                                <!-- Post Thumbnail -->
+                                                <div class="post-thumbnail">
+                                                    <img src="{{post.image.url}}" alt="">
+                                                    <!-- Catagory -->
+                                                    {% for tag in posts.tags.all %}
+                                                    <div class="post-cta">
+                                                        <a href="{% url "blog:post_list_by_tag" tag.slug %}">{{ tag.name }}</a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                <!-- Post Content -->
+                                                <div class="post-content">
+                                                    <a href="{{ post.get_absolute_url }}" class="headline">
+                                                        <h5>{{ post.title}}</h5>
+                                                    </a>
+                                                    <p>{{ post.intro|markdown|truncatewords_html:30}}</p>
+                                                    <!-- Post Meta -->
+                                                    <div class="post-meta">
+                                                        <p><a href="{{ post.get_absolute_url }}" class="post-author">{{ post.author }}</a> on <a href="#" class="post-date">{{ post.publish }}</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        {% endfor %}
+
+
+
+                                        <div class="col-12">
+                                            <div class="world-catagory-slider2 owl-carousel wow fadeInUpBig" data-wow-delay="0.4s">
+                                                <!-- ========= Single Catagory Slide ========= -->
+                                                <div class="single-cata-slide">
+                                                    <div class="row">
+                                                        {% for post in posts_slides %}
+                                                            <div class="col-12 col-md-6">
+                                                                <!-- Single Blog Post -->
+                                                                <div class="single-blog-post post-style-2 d-flex align-items-center mb-1">
+                                                                    <!-- Post Thumbnail -->
+                                                                    <div class="post-thumbnail">
+                                                                        <img src="{{post.image.url}}" alt="">
+                                                                    </div>
+                                                                    <!-- Post Content -->
+                                                                    <div class="post-content">
+                                                                        <a href="{{ post.get_absolute_url }}" class="headline">
+                                                                            <h5>{{ post.title}}</h5>
+                                                                        </a>
+                                                                        <!-- Post Meta -->
+                                                                        <div class="post-meta">
+                                                                            <p><a href="#" class="post-author">{{ post.author}}</a> on <a href="#" class="post-date">{{ post.publish}}</a></p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                                <!-- ========= Single Catagory Slide ========= -->
+                                                <div class="single-cata-slide">
+                                                    <div class="row">
+                                                        {% for post in posts_slides2 %}
+                                                            <div class="col-12 col-md-6">
+                                                                <!-- Single Blog Post -->
+                                                                <div class="single-blog-post post-style-2 d-flex align-items-center mb-1">
+                                                                    <!-- Post Thumbnail -->
+                                                                    <div class="post-thumbnail">
+                                                                        <img src="{{post.image.url}}" alt="">
+                                                                    </div>
+                                                                    <!-- Post Content -->
+                                                                    <div class="post-content">
+                                                                        <a href="{{ post.get_absolute_url }}" class="headline">
+                                                                            <h5>{{ post.title}}</h5>
+                                                                        </a>
+                                                                        <!-- Post Meta -->
+                                                                        <div class="post-meta">
+                                                                            <p><a href="#" class="post-author">{{ post.author}}</a> on <a href="#" class="post-date">{{ post.publish}}</a></p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========== Sidebar Area ========== -->
+                <div class="col-12 col-md-8 col-lg-4">
+                    <div class="post-sidebar-area wow fadeInUpBig" data-wow-delay="0.2s">
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">About World</h5>
+                            <div class="widget-content">
+                                <p>The mango is perfect in that it is always yellow and if it’s not, I don’t want to hear about it. The mango’s only flaw, and it’s a minor one, is the effort it sometimes takes to undress the mango, carve it up in a way that makes sense, and find its way to the mouth.</p>
+                            </div>
+                        </div>
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">Top Stories</h5>
+                            <div class="widget-content">
+                                <!-- Single Blog Post -->
+                                {% for post in top_stories %}
+                                <div class="single-blog-post post-style-2 d-flex align-items-center widget-post">
+                                    <!-- Post Thumbnail -->
+                                    <div class="post-thumbnail">
+                                        <img src="{{post.image.url}}" alt="">
+                                    </div>
+                                    <!-- Post Content -->
+                                    <div class="post-content">
+                                        <a href="{{ post.get_absolute_url }}" class="headline">
+                                            <h5 class="mb-0">{{ post.title}}</h5>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">Stay Connected</h5>
+                            <div class="widget-content">
+                                <div class="social-area d-flex justify-content-between">
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
+                                    <a href="https://twitter.com/snipherdev" target="_blank">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
+                                    <a href="https://github.com/snipher-marube" target="_blank">
+                                        <i class="fa fa-github"></i>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-instagram"></i>
+                                    </a>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-youtube"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">Today’s Pick</h5>
+                            <div class="widget-content">
+                                <!-- Single Blog Post -->
+                                {% for post in today_picks %}
+                                <div class="single-blog-post todays-pick">
+                                    <!-- Post Thumbnail -->
+                                    <div class="post-thumbnail">
+                                        <img src="{{post.image.url}}" alt="">
+                                    </div>
+                                    <!-- Post Content -->
+                                    <div class="post-content px-0 pb-0">
+                                        <a href="{{ post.get_absolute_url }}" class="headline">
+                                            <h5>{{ post.title }}</h5>
+                                        </a>
+                                        <p>{{ post.intro|markdown|truncatewords_html:30 }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More btn -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="load-more-btn mt-50 text-center">
+                        <a href="{% url 'blog:post_list' %}" class="btn world-btn">Load More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

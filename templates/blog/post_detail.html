@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title }}{% endblock %}
+{% load blog_tags %}
+{% block content %}
+    <style>
+        /*
+ * Basic button style
+ */
+        .btn {
+            box-shadow: 1px 1px 0 rgba(255,255,255,0.5) inset;
+            border-radius: 3px;
+            border: 1px solid;
+            display: inline-block;
+            height: 30px;
+            line-height: 18px;
+            padding: 0 8px;
+            position: relative;
+
+            font-size: 12px;
+            text-decoration: none;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        }
+        /*
+         * Counter button style
+         */
+        .btn-counter { margin-right: 39px; }
+        .btn-counter:after,
+        .btn-counter:hover:after { text-shadow: none; }
+        .btn-counter:after {
+            border-radius: 3px;
+            border: 1px solid #d3d3d3;
+            background-color: #eee;
+            padding: 0 8px;
+            color: #777;
+            content: attr(data-count);
+            left: 100%;
+            margin-left: 8px;
+            margin-right: -13px;
+            position: absolute;
+            top: -1px;
+        }
+        .btn-counter:before {
+            transform: rotate(45deg);
+            filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476, sizingMethod='auto expand');
+
+            background-color: #eee;
+            border: 1px solid #d3d3d3;
+            border-right: 0;
+            border-top: 0;
+            content: '';
+            position: absolute;
+            right: -13px;
+            top: 5px;
+            height: 6px;
+            width: 6px;
+            z-index: 1;
+            zoom: 1;
+        }
+        /*
+         * Custom styles
+         */
+        .btn {
+            background-color: #dbdbdb;
+            border-color: #bbb;
+            color: #666;
+        }
+        .btn:hover,
+        .btn.active {
+            text-shadow: 0 1px 0 #b12f27;
+            background-color: #f64136;
+            border-color: #b12f27;
+        }
+        .btn:active { box-shadow: 0 0 5px 3px rgba(0,0,0,0.2) inset; }
+        .btn span { color: #f64136; }
+        .btn:hover, .btn:hover span,
+        .btn.active, .btn.active span { color: #eeeeee; }
+        .btn:active span {
+            color: #b12f27;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+        }
+        .fa {
+            font-size: 20px;
+            margin-right: 5px;
+            padding: 0 5px;
+        }
+    </style>
+
+    <!-- ********** Hero Area Start ********** -->
+    <div class="hero-area height-600 bg-img background-overlay" style="background-image: url(../../static/img/blog-img/b2.jpg)">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="single-blog-title text-center">
+                        <!-- Catagory -->
+                        {% for tag in post.tags.all %}
+                            <div class="post-cta">
+                                <a href="{% url "blog:post_list_by_tag" tag.slug %}">{{tag.name}}</a>
+                            </div>
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        <h3>{{ post.title }}</h3>
+                    </div>
+
+                </div>
+                <!-- share post-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="single-blog-title text-center">
+                                <p>share this post on:</p>
+                                <div class="post-cta">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"
+                                       target="_blank" class="btn btn-counter">Facebook
+                                        <span class="fa fa-facebook"></span>
+                                    </a>
+                                    <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank"
+                                       class="btn btn-counter">Twitter
+                                        <span class="fa fa-twitter"></span>
+                                    </a>
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}"
+                                       target="_blank" class="btn btn-counter">LinkedIn
+                                        <span class="fa fa-linkedin"></span>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- share post end-->
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- like button -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="single-blog-title text-center">
+                    <div class="post-cta">
+                        <a href="{% url "blog:post_like" post.pk %}" title="Love it" class="btn btn-counter" data-count="{{ post.likes.count }}">
+                            <span>&#x2764;</span> Love it
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ********** Hero Area End ********** -->
+
+    <div class="main-content-wrapper section-padding-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- ============= Post Content Area ============= -->
+                <div class="col-12 col-lg-8">
+                    <div class="single-blog-content mb-100">
+                        <!-- Post Meta -->
+                        <div class="post-meta">
+                            <p><a href="#" class="post-author">{{ post.author }}</a> on <a href="#" class="post-date">{{ post.publish}}</a></p>
+                        </div>
+                        <!-- Post Content -->
+                        <div class="post-content">
+                            <h6>{{ post.body|safe }}</h6>
+                            <!--
+                            <blockquote class="mb-30">
+                                <h6>Aliquam auctor lacus a dapibus pulvinar. Morbi in elit erat. Quisque et augue nec tortor blandit hendrerit eget sit amet sapien. Curabitur at tincidunt metus, quis porta ex. Duis lacinia metus vel eros cursus pretium eget.</h6>
+                                <div class="post-author">
+                                    <p>Robert Morgan</p>
+                                </div>
+                            </blockquote>
+                            <h6>Donec orci dolor, pretium in luctus id, consequat vitae nibh. Quisque hendrerit, lorem sit amet mollis malesuada, urna orci volutpat ex, sed scelerisque nunc velit et massa. Sed maximus id erat vel feugiat. Phasellus bibendum nisi non urna bibendum elementum. Aenean tincidunt nibh vitae ex facilisis ultrices. Integer ornare efficitur ultrices. Integer neque lectus, venenatis at pulvinar quis, aliquet id neque. Mauris ultrices consequat velit, sed dignissim elit posuere in. Cras vitae dictum dui.</h6>
+                            -->
+                            <ul class="post-tags">
+                                {% for tag in post.tags.all %}
+                                <li>
+                                    <a href="{% url "blog:post_list_by_tag" tag.slug %}">{{ tag.name }}</a>
+                                </li>
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <!-- Post Meta -->
+                            <div class="post-meta second-part">
+                                <p><a href="#" class="post-author">Katy Liu</a> on <a href="#" class="post-date">Sep 29, 2017 at 9:48 am</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== Sidebar Area ========== -->
+                <div class="col-12 col-md-8 col-lg-4">
+                    <div class="post-sidebar-area mb-100">
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">About World</h5>
+                            <div class="widget-content">
+                                <p>The mango is perfect in that it is always yellow and if it’s not, I don’t want to hear about it. The mango’s only flaw, and it’s a minor one, is the effort it sometimes takes to undress the mango, carve it up in a way that makes sense, and find its way to the mouth.</p>
+                            </div>
+                        </div>
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">Top Stories</h5>
+                            <div class="widget-content">
+                                <!-- Single Blog Post -->
+                                {% for top_story in top_stories  %}
+                                    <!-- Single Blog Post -->
+                                    <div class="single-blog-post post-style-2 d-flex align-items-center widget-post">
+                                        <!-- Post Thumbnail -->
+                                        <div class="post-thumbnail">
+                                            <img src="{{top_story.image.url}}" alt="">
+                                        </div>
+                                        <!-- Post Content -->
+                                        <div class="post-content">
+                                            <a href="{{ top_story.get_absolute_url }}" class="headline">
+                                                <h5 class="mb-0">{{ top_story.title}}</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">Stay Connected</h5>
+                            <div class="widget-content">
+                                <div class="social-area d-flex justify-content-between">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                    <a href="#"><i class="fa fa-vimeo"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                    <a href="#"><i class="fa fa-google"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Widget Area -->
+                        <div class="sidebar-widget-area">
+                            <h5 class="title">Today’s Pick</h5>
+                            {% for post in today_picks %}
+                                <div class="widget-content">
+                                    <!-- Single Blog Post -->
+                                    <div class="single-blog-post todays-pick">
+                                        <!-- Post Thumbnail -->
+                                        <div class="post-thumbnail">
+                                            <img src="{{post.image.url}}" alt="">
+                                        </div>
+                                        <!-- Post Content -->
+                                        <div class="post-content px-0 pb-0">
+                                            <a href="{{ post.get_absolute_url }}" class="headline">
+                                                <h5>{{ post.title}}</h5>
+                                            </a>
+                                            <p>{{ post.intro|markdown|truncatewords_html:30 }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>Related posts</p>
+
+            <!-- ============== Related Post ============== -->
+            <div class="row">
+                {% for post  in similar_posts %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <!-- Single Blog Post -->
+                        <div class="single-blog-post">
+                            <!-- Post Thumbnail -->
+                            <div class="post-thumbnail">
+                                <img src="{{ post.image.url }}" alt="">
+                                <!-- Catagory -->
+                                {% for tag in post.tags.all %}
+                                    <div class="post-cta">
+                                        <a href="{% url "blog:post_list_by_tag" tag.slug %}">{{ tag.name }}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                <a href="{{ post.get_absolute_url }}" class="headline">
+                                    <h5>{{ post.title }}</h5>
+                                </a>
+                                <p>{{ post.intro|markdown|truncatewords_html:30  }}</p>
+                                <!-- Post Meta -->
+                                <div class="post-meta">
+                                    <p><a href="#" class="post-author">{{ post.author }}</a> on <a href="#" class="post-date">{{ post.publish}}</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>There are no similar posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="post-a-comment-area mt-70">
+                        <h5>Get in Touch</h5>
+                        <!-- Contact Form -->
+                        <form action="{% url "blog:post_comment" post.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="group">
+                                        <input type="text" name="name" id="name" required>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label>Enter your name</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="group">
+                                        <input type="email" name="email" id="email" required>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label>Enter your email</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="group">
+                                        <textarea name="body" id="message" required></textarea>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label>Enter your comment</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn world-btn">Post comment</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-8">
+                    <!-- Comment Area Start -->
+                    <div class="comment_area clearfix mt-70">
+                        <ol>
+                            {% for comment in comments %}
+                            <!-- Single Comment Area -->
+                            <li class="single_comment_area">
+                                <!-- Comment Content -->
+                                <div class="comment-content">
+                                    <!-- Comment Meta -->
+                                    <div class="comment-meta d-flex align-items-center justify-content-between">
+                                        <p><a href="#" class="post-author">{{ comment.name }}</a> on <a href="#" class="post-date">{{ comment.created }}</a></p>
+                                        <a href="#" class="comment-reply btn world-btn">Reply</a>
+                                    </div>
+                                    <p>{{ comment.body|linebreaks}}</p>
+                                </div>
+                                {% comment %} reply to comments {% endcomment %}
+                                {% for reply in comment.replies.all %}
+                                    <ol class="children">
+                                        <li class="single_comment_area">
+                                            <!-- Comment Content -->
+                                            <div class="comment-content">
+                                                <!-- Comment Meta -->
+                                                <div class="comment-meta d-flex align-items-center justify-content-between">
+                                                    <p><a href="#" class="post-author">{{ reply.name }}</a> on <a href="#" class="post-date">{{ reply.created }}</a></p>
+                                                    <a href="#" class="comment-reply btn world-btn">Reply</a>
+                                                </div>
+                                                <p>{{ reply.body|linebreaks}}</p>
+                                            </div>
+                                        </li>
+                                    </ol>
+                                {% endfor %}
+                            </li>
+
+                            {% empty %}
+                                <p>There are no comments yet.</p>
+                            {% endfor %}
+
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script>
+    /*
+ * Love button for Design it & Code it
+ * http://designitcodeit.com/i/9
+ */
+    $('.btn-counter').on('click', function(event, count) {
+        event.preventDefault();
+
+        var $this = $(this),
+            count = $this.attr('data-count'),
+            active = $this.hasClass('active'),
+            multiple = $this.hasClass('multiple-count');
+
+        // First method, allows to add custom function
+        // Use when you want to do an ajax request
+        if (multiple) {
+        $this.attr('data-count', ++count);
+        // Your code here
+        } else {
+        $this.attr('data-count', active ? --count : ++count).toggleClass('active');
+        // Your code here
+        }
+
+        // Second method, use when ... I dunno when but it looks cool and that's why it is here
+        $.fn.noop = $.noop;
+        $this.attr('data-count', ! active || multiple ? ++count : --count  )[multiple ? 'noop' : 'toggleClass']('active');
+
+    });
+
+    // prevent page reload when clicking on the like button
+    $('.btn-counter').click(function(e) {
+        e.preventDefault();
+    });
+</script>
+{% endblock %}
+
+
+
